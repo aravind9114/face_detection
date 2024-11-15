@@ -7,14 +7,22 @@ from streamlit_webrtc import webrtc_streamer, VideoTransformerBase
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 
 class VideoTransformer(VideoTransformerBase):
+    def __init__(self):
+        self.frame_count = 0
+
     def transform(self, frame):
+        self.frame_count += 1
+        print(f"Processing frame {self.frame_count}")
+
         img = frame.to_ndarray(format="bgr24")
         
         # Convert the frame to grayscale
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        print("Converted to grayscale")
 
         # Detect faces in the frame
         faces = face_cascade.detectMultiScale(gray, 1.3, 5)
+        print(f"Detected faces: {faces}")
 
         # Draw rectangles around detected faces
         for (x, y, w, h) in faces:
