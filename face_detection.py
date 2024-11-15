@@ -25,4 +25,28 @@ class VideoTransformer(VideoTransformerBase):
 st.title("Real-Time Face Detection")
 st.write("Using OpenCV and Streamlit to detect faces in real-time.")
 
-webrtc_streamer(key="example", video_transformer_factory=VideoTransformer)
+# Create session state for controlling the video stream
+if 'run' not in st.session_state:
+    st.session_state.run = False
+
+# Start button
+if st.button("Start"):
+    st.session_state.run = True
+
+# Stop button
+if st.button("Stop"):
+    st.session_state.run = False
+
+# Ensure webcam access and handle errors
+if st.session_state.run:
+    try:
+        webrtc_streamer(key="example", video_transformer_factory=VideoTransformer)
+    except Exception as e:
+        st.error(f"An error occurred: {e}")
+        st.session_state.run = False
+else:
+    st.write("Click 'Start' to begin the video stream.")
+
+# Clear video placeholder and release resources when stopped
+if not st.session_state.run:
+    st.write("Video capture stopped.")
