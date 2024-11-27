@@ -34,4 +34,3 @@ if picture:
     
     # Display the processed image
     st.image(image_rgb, channels="RGB")
-
